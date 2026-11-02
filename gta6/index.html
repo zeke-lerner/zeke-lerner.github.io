@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTA VI Countdown HQ</title>
+<meta name="description" content="Live countdown to Grand Theft Auto VI, review embargo timer, and auto-updating news feed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Monoton&family=Pacifico&family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12021f; --pink:#ff2e93; --orange:#ff9f1c; --cyan:#21e6ff; --purple:#8a2be2;
+  --ink:#fff4fb; --muted:#c9a7d8; --card:rgba(30,6,48,.62); --line:rgba(255,46,147,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
+a{color:inherit}
+/* ---------- sky ---------- */
+.sky{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#12021f 0%,#3b0a57 35%,#b0186e 62%,#ff6b35 78%,#ffb347 86%,#12021f 86.2%)}
+.sun{position:fixed;left:50%;top:52vh;width:min(60vw,520px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;z-index:-2;
+  background:linear-gradient(180deg,#ffe66d 0%,#ff9f1c 45%,#ff2e93 100%);
+  -webkit-mask:linear-gradient(#000 0 58%,transparent 58% 61%,#000 61% 68%,transparent 68% 72%,#000 72% 79%,transparent 79% 84%,#000 84% 90%,transparent 90%);mask:linear-gradient(#000 0 58%,transparent 58% 61%,#000 61% 68%,transparent 68% 72%,#000 72% 79%,transparent 79% 84%,#000 84% 90%,transparent 90%);
+  filter:drop-shadow(0 0 60px #ff2e93)}
+.grid{position:fixed;left:-50%;right:-50%;bottom:0;height:14vh;z-index:-1;
+  background:linear-gradient(#12021f,transparent 30%),repeating-linear-gradient(90deg,rgba(33,230,255,.45) 0 2px,transparent 2px 80px),repeating-linear-gradient(0deg,rgba(33,230,255,.45) 0 2px,transparent 2px 28px);
+  transform:perspective(300px) rotateX(60deg);transform-origin:bottom;animation:drive 1.2s linear infinite}
+@keyframes drive{to{background-position:0 0,0 0,0 28px}}
+.palms{position:fixed;bottom:13vh;left:0;right:0;height:38vh;z-index:-1;pointer-events:none;display:flex;justify-content:space-between}
+.palms svg{height:100%;fill:#12021f}
+.palms svg:last-child{transform:scaleX(-1)}
+#stars{position:fixed;inset:0;z-index:-2;pointer-events:none}
+/* ---------- layout ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 80px}
+header{text-align:center;padding:30px 0 10px}
+.logo{font-family:"Monoton",cursive;font-size:clamp(56px,14vw,150px);line-height:.9;
+  background:linear-gradient(180deg,#fff 0%,#ffd1e8 30%,#ff2e93 60%,#8a2be2 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(255,46,147,.8));letter-spacing:4px}
+.script{font-family:"Pacifico",cursive;font-size:clamp(24px,5vw,44px);color:var(--cyan);text-shadow:0 0 12px var(--cyan),0 0 30px var(--cyan);transform:rotate(-6deg);margin-top:-12px;display:inline-block}
+.sub{color:var(--muted);margin-top:12px;font-size:15px}
+.wanted{display:flex;gap:6px;justify-content:center;margin:16px 0 0;font-size:28px}
+.wanted span{color:#3c1b4d;transition:.4s;text-shadow:none}
+.wanted span.on{color:#ffe66d;text-shadow:0 0 10px #ffe66d;animation:blink 1s steps(2) infinite}
+.wanted-label{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:3px;color:var(--muted);text-align:center;margin-top:4px}
+@keyframes blink{50%{opacity:.45}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 10px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.card h2{font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--orange);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.card h2::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange)}
+
+.hero{margin-top:28px;text-align:center;padding:30px 18px}
+.big{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:820px;margin:0 auto}
+.unit{background:rgba(0,0,0,.35);border:1px solid rgba(33,230,255,.3);border-radius:14px;padding:16px 4px 10px;position:relative;overflow:hidden}
+.unit b{display:block;font-family:"JetBrains Mono",monospace;font-weight:800;font-size:clamp(34px,9vw,84px);line-height:1;
+  color:#fff;text-shadow:0 0 8px var(--pink),0 0 24px var(--pink),0 0 48px var(--pink)}
+.unit small{display:block;margin-top:8px;font-size:11px;letter-spacing:3px;color:var(--cyan)}
+.unit.tick b{animation:pop .35s}
+@keyframes pop{30%{transform:scale(1.08);color:var(--cyan)}}
+.ms{font-family:"JetBrains Mono",monospace;color:var(--muted);margin-top:14px;font-size:14px}
+.target{margin-top:6px;font-size:14px;color:var(--muted)}
+
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:18px}
+.mini{display:flex;gap:10px;font-family:"JetBrains Mono",monospace;font-size:clamp(22px,5vw,34px);font-weight:800;color:var(--cyan);text-shadow:0 0 14px var(--cyan)}
+.mini span small{font-size:11px;color:var(--muted);font-weight:500;margin-left:2px;text-shadow:none}
+.note{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5}
+.pill{display:inline-block;font-size:10px;letter-spacing:2px;padding:3px 8px;border-radius:99px;border:1px solid var(--orange);color:var(--orange);margin-left:auto}
+.pill.green{border-color:#3dff9e;color:#3dff9e}
+
+.bar{height:14px;border-radius:99px;background:rgba(0,0,0,.4);overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--pink),var(--orange));box-shadow:0 0 20px var(--pink);border-radius:99px;position:relative}
+.bar i::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.18) 0 8px,transparent 8px 16px);animation:slide 1s linear infinite}
+@keyframes slide{to{background-position:22px 0}}
+.pct{font-family:"JetBrains Mono",monospace;font-size:40px;font-weight:800;color:#fff;text-shadow:0 0 16px var(--pink);margin-bottom:10px}
+
+/* timeline */
+.tl{list-style:none;position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:linear-gradient(var(--cyan),var(--pink))}
+.tl li{position:relative;padding:0 0 14px;font-size:14px}
+.tl li::before{content:"";position:absolute;left:-21px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--cyan)}
+.tl li.done::before{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.tl li.dead{opacity:.55}.tl li.dead span{text-decoration:line-through}
+.tl li.next::before{border-color:var(--pink);background:var(--pink);box-shadow:0 0 14px var(--pink);animation:blink 1s infinite}
+.tl time{display:block;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+
+/* news */
+.newshead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.newshead input{flex:1;min-width:160px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);padding:10px 14px;border-radius:10px;font:inherit}
+.chip{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.15);padding:8px 12px;border-radius:99px;cursor:pointer;font:inherit;font-size:13px}
+.chip.on{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 0 14px var(--pink)}
+.news{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.news a{display:block;text-decoration:none;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px;transition:.2s;position:relative}
+.news a:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 8px 24px rgba(33,230,255,.2)}
+.news h3{font-size:15px;line-height:1.35;font-weight:600}
+.news .meta{display:flex;justify-content:space-between;gap:8px;margin-top:10px;font-size:11px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.news .new{position:absolute;top:-8px;right:10px;background:var(--orange);color:#12021f;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
+.ticker{overflow:hidden;white-space:nowrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(0,0,0,.45);margin-top:22px;padding:9px 0;font-family:"JetBrains Mono",monospace;font-size:13px}
+.ticker div{display:inline-block;padding-left:100%;animation:tick 70s linear infinite}
+.ticker b{color:var(--pink);margin:0 14px}
+@keyframes tick{to{transform:translateX(-100%)}}
+
+/* fun */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:rgba(0,0,0,.3);border-radius:10px;padding:12px}
+.stat b{display:block;font-family:"JetBrains Mono",monospace;font-size:22px;color:var(--orange)}
+.stat span{font-size:12px;color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{background:linear-gradient(90deg,var(--pink),var(--purple));color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 0 18px rgba(255,46,147,.5)}
+.btn.ghost{background:transparent;border:1px solid var(--cyan);color:var(--cyan);box-shadow:none}
+.duel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.duel label{font-size:12px;color:var(--muted);display:block}
+.duel input{width:100%;margin-top:4px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--ink);padding:9px;border-radius:8px;font:inherit}
+.radio{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--cyan);margin-top:10px;min-height:20px}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:40px;line-height:1.7}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--muted);border-radius:4px;padding:0 5px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(120px);background:#000;border:2px solid #ffe66d;color:#ffe66d;padding:12px 20px;border-radius:10px;font-family:"JetBrains Mono",monospace;transition:.4s;z-index:20;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+body.wasted .wrap{filter:grayscale(1)}
+.wasted-text{position:fixed;inset:0;display:none;place-items:center;font-family:"Pacifico";font-size:clamp(60px,15vw,160px);color:#c11;text-shadow:3px 3px 0 #000;z-index:25;pointer-events:none}
+body.wasted .wasted-text{display:grid}
+@media (max-width:560px){.big{grid-template-columns:repeat(2,1fr)}.stats,.duel{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="sky"></div><div class="sun"></div><canvas id="stars"></canvas><div class="grid"></div>
+<div class="palms" aria-hidden="true">
+  <svg viewBox="0 0 200 400"><path d="M95 400 C100 300 110 200 120 120 L126 120 C118 200 110 300 108 400Z"/><path d="M122 120 C80 90 30 100 0 140 C40 110 80 108 122 124Z M122 120 C160 80 200 90 200 120 C170 100 150 104 122 124Z M122 118 C110 70 70 40 40 40 C80 60 100 80 120 122Z M124 118 C140 70 170 50 200 55 C160 70 140 90 126 122Z M122 120 C100 110 60 150 50 200 C80 150 100 130 124 124Z"/></svg>
+  <svg viewBox="0 0 200 400"><path d="M95 400 C100 300 110 220 115 150 L121 150 C116 220 110 300 108 400Z"/><path d="M118 150 C80 120 30 130 0 170 C40 140 80 138 118 154Z M118 150 C160 110 200 120 200 150 C170 130 150 134 118 154Z M118 148 C106 100 66 70 36 70 C76 90 96 110 116 152Z M120 148 C136 100 166 80 196 85 C156 100 136 120 122 152Z"/></svg>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="logo">VI</div>
+    <div class="script">Leonida awaits</div>
+    <p class="sub">Countdown HQ for <b>Grand Theft Auto VI</b> · built for two degenerates who can't wait</p>
+    <div class="wanted" id="wanted" aria-label="hype wanted level"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    <div class="wanted-label">HYPE WANTED LEVEL</div>
+  </header>
+
+  <section class="card hero">
+    <h2 style="justify-content:center">Launch · PS5 &amp; Xbox Series X|S</h2>
+    <div class="big" id="big">
+      <div class="unit"><b id="d">--</b><small>DAYS</small></div>
+      <div class="unit"><b id="h">--</b><small>HOURS</small></div>
+      <div class="unit"><b id="m">--</b><small>MINUTES</small></div>
+      <div class="unit"><b id="s">--</b><small>SECONDS</small></div>
+    </div>
+    <div class="ms" id="ms"></div>
+    <div class="target" id="launchTarget"></div>
+  </section>
+
+  <div class="ticker"><div id="ticker">Loading the wire…</div></div>
+
+  <div class="row">
+    <section class="card">
+      <h2>Review embargo <span class="pill">RUMORED</span></h2>
+      <div class="mini" id="embargo"></div>
+      <p class="note" id="embargoNote">Insiders (NateTheHate, Insider Gaming) point to <b>Nov 18, 2026</b>, the day before launch. Some outlets may be held until launch day. Not confirmed by Rockstar.</p>
+    </section>
+    <section class="card">
+      <h2>Hype journey</h2>
+      <div class="pct" id="pct">0%</div>
+      <div class="bar"><i id="barFill" style="width:0"></i></div>
+      <p class="note">From Trailer 1 (Dec 5, 2023) to launch day. Every pixel took blood, sweat, and two delays.</p>
+    </section>
+    <section class="card">
+      <h2>Your local unlock</h2>
+      <div class="mini" id="localTime" style="font-size:22px"></div>
+      <p class="note">Counting down to <b>midnight Nov 19 in your time zone</b>. Digital pre-loads usually unlock at local midnight. Tap below to switch to a global 12:00&nbsp;AM&nbsp;ET drop.</p>
+      <div class="btns"><button class="btn ghost" id="modeBtn">Use 12 AM ET instead</button></div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:18px">
+    <h2>The wire · latest GTA VI news <span class="pill green" id="updated">LIVE</span></h2>
+    <div class="newshead">
+      <input id="q" type="search" placeholder="Filter headlines… (try “trailer”, “review”, “price”)">
+      <button class="chip on" data-f="all">All</button>
+      <button class="chip" data-f="news">News sites</button>
+      <button class="chip" data-f="reddit">Reddit</button>
+      <button class="chip" data-f="rockstar">Rockstar</button>
+    </div>
+    <div class="news" id="news"></div>
+  </section>
+
+  <div class="row">
+    <section class="card">
+      <h2>Road to Leonida</h2>
+      <ul class="tl" id="tl"></ul>
+    </section>
+    <section class="card">
+      <h2>Time left, translated</h2>
+      <div class="stats" id="stats"></div>
+    </section>
+    <section class="card">
+      <h2>Friend duel · review score bets</h2>
+      <div class="duel">
+        <div><label>Player 1</label><input id="p1n" placeholder="Name"><input id="p1s" type="number" min="0" max="100" placeholder="Metacritic guess"></div>
+        <div><label>Player 2</label><input id="p2n" placeholder="Name"><input id="p2s" type="number" min="0" max="100" placeholder="Metacritic guess"></div>
+      </div>
+      <label class="note" style="display:block">Actual Metacritic (fill in on Nov 18)</label>
+      <div class="duel"><input id="real" type="number" min="0" max="100" placeholder="??"><button class="btn" id="judge">Who won?</button></div>
+      <div class="radio" id="verdict"></div>
+      <p class="note">Saved in this browser only.</p>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:18px">
+    <h2>Vice City FM · on air</h2>
+    <p class="note" style="margin-top:0">A synthwave loop generated live in your browser with the Web Audio API. No files, no copyright strikes.</p>
+    <div class="btns"><button class="btn" id="radioBtn">▶ Tune in</button><button class="btn ghost" id="partyBtn">🎉 Test launch party</button><button class="btn ghost" id="shareBtn">📋 Copy countdown</button></div>
+    <div class="radio" id="nowPlaying"></div>
+  </section>
+
+  <footer>
+    News refreshes automatically every 30 min via GitHub Actions from Google News, Rockstar Newswire &amp; r/GTA6, and live from Reddit in your browser.<br>
+    Fan-made, not affiliated with Rockstar Games or Take-Two. Cheat codes are enabled. Try typing <kbd>leonida</kbd>, <kbd>wasted</kbd> or <kbd>hype</kbd>.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="wasted-text">wasted</div>
+<canvas id="confetti"></canvas>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------- dates ---------- */
+const TRAILER1 = new Date("2023-12-05T14:00:00Z");
+const EMBARGO  = new Date("2026-11-18T17:00:00Z"); // rumored ~12 PM ET (EST)
+const LAUNCH_ET = new Date("2026-11-19T05:00:00Z"); // 12:00 AM EST
+const LAUNCH_LOCAL = new Date(2026, 10, 19, 0, 0, 0);
+let mode = store.get("gta6mode") || "local";
+const launch = () => mode === "et" ? LAUNCH_ET : LAUNCH_LOCAL;
+
+const MILESTONES = [
+  ["2022-02-04","Rockstar confirms next GTA is in development"],
+  ["2023-12-05","Trailer 1 drops, breaks YouTube records"],
+  ["2025-10-01","Original target: Fall 2025",true],
+  ["2025-05-06","Trailer 2 lands, Jason & Lucia front and center"],
+  ["2026-05-26","Second target: May 26, 2026",true],
+  ["2026-10-20","Review codes reportedly go out"],
+  ["2026-11-18","Review embargo lifts (rumored)"],
+  ["2026-11-19","LAUNCH DAY. See you in Vice City."],
+].sort((a,b)=>a[0].localeCompare(b[0]));
+
+const pad = (n,l=2) => String(n).padStart(l,"0");
+function split(ms){ms=Math.max(0,ms);return{d:Math.floor(ms/864e5),h:Math.floor(ms/36e5)%24,m:Math.floor(ms/6e4)%60,s:Math.floor(ms/1e3)%60,ms:ms%1000}}
+
+let last = {}; let partied = false;
+function tick(){
+  const now = new Date(), L = launch(), t = split(L - now);
+  for (const k of ["d","h","m","s"]) {
+    const v = k==="d" ? String(t.d) : pad(t[k]);
+    if (last[k] !== v) { const el=$(k); el.textContent=v; el.parentElement.classList.remove("tick"); void el.offsetWidth; el.parentElement.classList.add("tick"); last[k]=v; }
+  }
+  $("ms").textContent = L>now ? `${Math.floor((L-now)/1000).toLocaleString()} seconds · .${pad(t.ms,3)}` : "IT'S OUT. GO PLAY. 🌴";
+  if (L<=now && !partied){partied=true;party();}
+  const e = split(EMBARGO-now);
+  $("embargo").innerHTML = EMBARGO>now ? `<span>${e.d}<small>d</small></span><span>${pad(e.h)}<small>h</small></span><span>${pad(e.m)}<small>m</small></span><span>${pad(e.s)}<small>s</small></span>` : "REVIEWS ARE LIVE";
+  const p = Math.min(1,(now-TRAILER1)/(L-TRAILER1));
+  $("pct").textContent = (p*100).toFixed(5)+"%"; $("barFill").style.width = (p*100)+"%";
+  // wanted level: more stars the closer we get
+  const days = (L-now)/864e5, stars = days<=0?6:days<1?5:days<3?4:days<7?3:days<30?2:1;
+  document.querySelectorAll("#wanted span").forEach((s,i)=>s.classList.toggle("on",i<stars));
+  if (now.getSeconds()%5===0 || !tick.statsDone) { renderStats(L-now); tick.statsDone=true; }
+  requestAnimationFrame(tick);
+}
+function renderTargets(){
+  const f = d => d.toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"});
+  $("launchTarget").textContent = "Target: " + f(launch()) + (mode==="et"?" (12:00 AM ET)":" (your local midnight)");
+  $("localTime").textContent = f(launch());
+  $("modeBtn").textContent = mode==="et" ? "Use my local midnight" : "Use 12 AM ET instead";
+}
+$("modeBtn").onclick = () => { mode = mode==="et"?"local":"et"; store.set("gta6mode",mode); last={}; renderTargets(); };
+
+function renderStats(ms){
+  const h = ms/36e5, s = Math.max(0,h);
+  const items = [
+    [Math.floor(s*60/2.5).toLocaleString(),"times you could rewatch Trailer 1"],
+    [Math.floor(s/8).toLocaleString(),"good nights of sleep (lol, you won't)"],
+    [Math.floor(s*60/48).toLocaleString(),"full GTA V Online heists"],
+    [Math.floor(s*3600*1.2).toLocaleString(),"heartbeats of pure anticipation"],
+    [Math.floor(s/0.25).toLocaleString(),"pizza deliveries to the couch"],
+    [(s/24/7).toFixed(2),"weeks of pretending to be productive"],
+  ];
+  $("stats").innerHTML = items.map(([b,t])=>`<div class="stat"><b>${b}</b><span>${t}</span></div>`).join("");
+}
+function renderTimeline(){
+  const now = new Date(); let nextSet=false;
+  $("tl").innerHTML = MILESTONES.map(([d,t,dead])=>{
+    const date=new Date(d+"T12:00:00Z"); let cls = dead?"dead":date<now?"done":"";
+    if(!dead && date>=now && !nextSet){cls="next";nextSet=true;}
+    return `<li class="${cls}"><time>${date.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}${dead?" · DELAYED":""}</time><span>${t}</span></li>`;
+  }).join("");
+}
+
+/* ---------- news ---------- */
+let NEWS = [], filter = "all";
+const esc = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function ago(iso){ if(!iso) return ""; const s=(Date.now()-new Date(iso))/1000; if(s<3600)return Math.max(1,Math.floor(s/60))+"m ago"; if(s<86400)return Math.floor(s/3600)+"h ago"; return Math.floor(s/86400)+"d ago"; }
+const kind = it => /reddit/i.test(it.feed)?"reddit":/rockstar/i.test(it.feed)?"rockstar":"news";
+function renderNews(){
+  const q = $("q").value.toLowerCase();
+  const list = NEWS.filter(it => (filter==="all"||kind(it)===filter) && (!q || it.title.toLowerCase().includes(q)));
+  $("news").innerHTML = list.length ? list.slice(0,30).map(it=>{
+    const fresh = it.date && (Date.now()-new Date(it.date))<6*36e5;
+    return `<a href="${esc(it.url)}" target="_blank" rel="noopener">${fresh?'<span class="new">NEW</span>':""}<h3>${esc(it.title)}</h3><div class="meta"><span>${esc(it.source)}</span><span>${ago(it.date)}</span></div></a>`;
+  }).join("") : `<p class="note">Nothing matches. Rockstar is being quiet… suspicious.</p>`;
+  $("ticker").innerHTML = NEWS.slice(0,15).map(it=>`<b>★</b>${esc(it.title)}`).join("") || "No news yet.";
+}
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");filter=c.dataset.f;renderNews();});
+$("q").oninput = renderNews;
+
+async function loadNews(){
+  const merged = new Map();
+  const add = it => { const k=it.title.toLowerCase().replace(/\W+/g,"").slice(0,60); if(!merged.has(k)) merged.set(k,it); };
+  try { const r = await fetch("news.json?t="+Date.now()); const j = await r.json(); j.items.forEach(add);
+        if(j.updated) $("updated").textContent = "UPDATED " + ago(j.updated).toUpperCase(); } catch(e){}
+  try { // live from Reddit, straight from the browser
+    const r = await fetch("https://www.reddit.com/r/GTA6/hot.json?limit=25&raw_json=1"); const j = await r.json();
+    j.data.children.filter(c=>!c.data.stickied && c.data.score>50).forEach(c=>add({title:c.data.title,url:"https://reddit.com"+c.data.permalink,date:new Date(c.data.created_utc*1000).toISOString(),source:`r/GTA6 · ▲${c.data.score.toLocaleString()}`,feed:"reddit-live"}));
+  } catch(e){}
+  NEWS = [...merged.values()].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  renderNews();
+}
+
+/* ---------- friend duel ---------- */
+["p1n","p1s","p2n","p2s","real"].forEach(id=>{ const v=store.get("gta6_"+id); if(v) $(id).value=v; $(id).oninput=()=>store.set("gta6_"+id,$(id).value); });
+$("judge").onclick = () => {
+  const r=+$("real").value, a=+$("p1s").value, b=+$("p2s").value, n1=$("p1n").value||"Player 1", n2=$("p2n").value||"Player 2";
+  if(!$("real").value){ $("verdict").textContent="Reviews aren't out yet. Patience, criminal."; return; }
+  const da=Math.abs(r-a), db=Math.abs(r-b);
+  $("verdict").textContent = da===db ? "Dead heat. You both buy the pizza." : `${da<db?n1:n2} wins by ${Math.abs(da-db)} pt${Math.abs(da-db)===1?"":"s"}. ${da<db?n2:n1} buys the snacks on launch night.`;
+  if(da!==db) party();
+};
+
+/* ---------- starfield ---------- */
+const sc=$("stars"), sx=sc.getContext("2d"); let pts=[];
+function sizeStars(){sc.width=innerWidth;sc.height=innerHeight;pts=Array.from({length:120},()=>({x:Math.random()*sc.width,y:Math.random()*sc.height*.45,r:Math.random()*1.4,p:Math.random()*6}))}
+function drawStars(t){sx.clearRect(0,0,sc.width,sc.height);for(const s of pts){sx.globalAlpha=.4+.6*Math.abs(Math.sin(t/900+s.p));sx.fillStyle="#fff";sx.beginPath();sx.arc(s.x,s.y,s.r,0,7);sx.fill()}requestAnimationFrame(drawStars)}
+addEventListener("resize",sizeStars); sizeStars(); requestAnimationFrame(drawStars);
+
+/* ---------- confetti ---------- */
+const cc=$("confetti"), cx=cc.getContext("2d"); let bits=[];
+function party(){
+  cc.width=innerWidth; cc.height=innerHeight;
+  const cols=["#ff2e93","#21e6ff","#ff9f1c","#ffe66d","#8a2be2","#3dff9e"];
+  for(let i=0;i<260;i++) bits.push({x:innerWidth/2,y:innerHeight*.6,vx:(Math.random()-.5)*18,vy:-Math.random()*20-6,r:Math.random()*6+3,c:cols[i%6],a:Math.random()*6,va:(Math.random()-.5)*.3,e:Math.random()<.15?"🌴":Math.random()<.1?"💵":""});
+  toast("★★★★★★ MISSION PASSED · RESPECT +");
+  if(bits.length<=260) requestAnimationFrame(boom);
+}
+function boom(){
+  cx.clearRect(0,0,cc.width,cc.height);
+  bits=bits.filter(b=>b.y<cc.height+40);
+  for(const b of bits){b.vy+=.45;b.vx*=.99;b.x+=b.vx;b.y+=b.vy;b.a+=b.va;cx.save();cx.translate(b.x,b.y);cx.rotate(b.a);
+    if(b.e){cx.font="22px serif";cx.fillText(b.e,0,0)}else{cx.fillStyle=b.c;cx.fillRect(-b.r/2,-b.r/4,b.r,b.r/2)}cx.restore()}
+  if(bits.length) requestAnimationFrame(boom); else cx.clearRect(0,0,cc.width,cc.height);
+}
+$("partyBtn").onclick = party;
+
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2800)}
+
+$("shareBtn").onclick = async () => {
+  const t=split(launch()-new Date());
+  const txt=`🌴 GTA VI drops in ${t.d}d ${t.h}h ${t.m}m ${t.s}s. ${location.href}`;
+  try{await navigator.clipboard.writeText(txt);toast("Copied. Send it to the group chat.")}catch(e){toast(txt)}
+};
+
+/* ---------- Vice City FM (Web Audio synthwave) ---------- */
+let ac=null, playing=false, loopT=null;
+const NOTES={A2:110,C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,C4:261.63,D4:293.66,E4:329.63,G4:392,A4:440,C5:523.25,E5:659.25};
+const CHORDS=[["A2","A3","C4","E4"],["F3","A3","C4","E4"],["C3","G3","C4","E4"],["G3","G3","D4","G4"]];
+const LEAD=["E5","C5","A4","C5","E5","G4","A4","E4"];
+function voice(f,t,d,type,g,dest){const o=ac.createOscillator(),v=ac.createGain();o.type=type;o.frequency.value=f;v.gain.setValueAtTime(0,t);v.gain.linearRampToValueAtTime(g,t+.02);v.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(v).connect(dest);o.start(t);o.stop(t+d+.05)}
+function kick(t,dest){const o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(40,t+.15);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(g).connect(dest);o.start(t);o.stop(t+.31)}
+function snare(t,dest){const b=ac.createBuffer(1,ac.sampleRate*.2,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=b;f.type="highpass";f.frequency.value=1500;g.gain.value=.35;s.connect(f).connect(g).connect(dest);s.start(t)}
+function scheduleBar(start,bar,dest){
+  const beat=60/96, ch=CHORDS[bar%4];
+  ch.slice(1).forEach(n=>voice(NOTES[n],start,beat*4,"sawtooth",.05,dest));
+  for(let i=0;i<8;i++) voice(NOTES[ch[0]]/(i%2?1:2)*2,start+i*beat/2,beat/2,"square",.07,dest);
+  for(let i=0;i<4;i++){kick(start+i*beat,dest); if(i%2) snare(start+i*beat,dest)}
+  if(bar%2) LEAD.forEach((n,i)=>voice(NOTES[n],start+i*beat/2,beat/2*.9,"triangle",.08,dest));
+}
+const SONGS=["“Sunset on Ocean Drive” · Vice City FM","“Leonida Nights” · Vice City FM","“Jason & Lucia (Getaway Mix)” · Vice City FM"];
+$("radioBtn").onclick = () => {
+  if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();}
+  if(playing){ac.suspend();playing=false;$("radioBtn").textContent="▶ Tune in";$("nowPlaying").textContent="";return}
+  ac.resume(); playing=true; $("radioBtn").textContent="⏸ Off air";
+  $("nowPlaying").textContent="♪ Now playing: "+SONGS[Math.floor(Math.random()*SONGS.length)];
+  if(loopT) return;
+  const master=ac.createGain(); master.gain.value=.5;
+  const delay=ac.createDelay(); delay.delayTime.value=60/96*.75; const fb=ac.createGain(); fb.gain.value=.3;
+  master.connect(ac.destination); master.connect(delay); delay.connect(fb).connect(delay); delay.connect(ac.destination);
+  let bar=0, next=ac.currentTime+.1; const barLen=60/96*4;
+  loopT=setInterval(()=>{while(next<ac.currentTime+1.5){scheduleBar(next,bar++,master);next+=barLen}},200);
+};
+
+/* ---------- cheat codes ---------- */
+let buf="";
+addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT") return;
+  buf=(buf+e.key.toLowerCase()).slice(-12);
+  if(buf.endsWith("leonida")){document.documentElement.style.setProperty("--pink","#3dff9e");document.documentElement.style.setProperty("--cyan","#ffe66d");toast("CHEAT ACTIVATED · Everglades mode");}
+  if(buf.endsWith("wasted")){document.body.classList.add("wasted");setTimeout(()=>document.body.classList.remove("wasted"),2500);}
+  if(buf.endsWith("hype")){party();}
+});
+
+renderTargets(); renderTimeline(); loadNews(); setInterval(loadNews,5*60*1000); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
