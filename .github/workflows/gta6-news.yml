@@ -1,0 +1,15 @@
+name: GTA 6 news refresh
+on:
+  schedule: [{ cron: "*/30 * * * *" }]
+  workflow_dispatch:
+permissions: { contents: write }
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/fetch_gta6_news.py
+      - run: |
+          git config user.name "gta6-bot"; git config user.email "gta6-bot@users.noreply.github.com"
+          git add gta6/news.json
+          git diff --cached --quiet || (git commit -m "chore: refresh GTA 6 news" && git push)
